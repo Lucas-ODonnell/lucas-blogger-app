@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_11_201231) do
+ActiveRecord::Schema.define(version: 2020_10_12_013557) do
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.integer "record_id", null: false
+    t.integer "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -21,6 +42,16 @@ ActiveRecord::Schema.define(version: 2020_10_11_201231) do
     t.string "image_content_type"
     t.integer "image_file_size"
     t.datetime "image_updated_at"
+  end
+
+  create_table "authors", force: :cascade do |t|
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "crypted_password", null: false
+    t.string "salt", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_authors_on_email", unique: true
   end
 
   create_table "comments", force: :cascade do |t|
@@ -47,6 +78,7 @@ ActiveRecord::Schema.define(version: 2020_10_11_201231) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "articles"
   add_foreign_key "taggings", "articles"
   add_foreign_key "taggings", "tags"
